@@ -40,6 +40,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QFileSystemModel *model = new QFileSystemModel;
        model->setRootPath(QDir::currentPath());
+       model->sort(2,Qt::AscendingOrder);
+
        tree->setModel(model);
           tree->setAnimated(false);
           tree->setSortingEnabled(true);

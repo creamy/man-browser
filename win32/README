@@ -1,0 +1,40 @@
+
+Note: man browser also works on MS Windows / cygwin. 
+Note that the man2hmtl that is a cygwin package in /usr/bin is *different* than 
+the one we need for this app. 
+Just download the man2html package from 
+http://dcssrv1.oit.uci.edu/indiv/ehood/man2html.html
+, edit the man2html (it's a perl script, no build/install necessary) 
+to change the shebang to /usr/bin/perl (default for cygwin), 
+	chmod 755 and copy man2html to /usr/local/bin/
+
+Then update mainwindow.cpp for your system as follows (HERE):
+
+
+...
+
+void MainWindow::changeCurrent(const QModelIndex ¤t)
+ {
+
+    QString text = current.data(Qt::DisplayRole).toString();
+    
+	//HERE add for cygwin to remove .exe from filename
+	text = text.replace(".exe","");
+	
+    statusBar()->showMessage(
+    tr("man browser (%1) ")
+        .arg(text));
+
+    QStringList arguments;
+
+    //http://www.oac.uci.edu/indiv/ehood/man2html.html
+    QString foo = "/usr/bin/man "+text+" | /usr/local/bin/man2html";
+
+    arguments << "-c" << foo;
+
+    QProcess* process = new QProcess(this);
+
+	//HERE change for cygwin, put your path to sh.exe
+    process->start("c:\\cygwin\\bin\\sh.exe", arguments);
+
+...
